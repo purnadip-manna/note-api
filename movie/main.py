@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 
@@ -32,7 +32,7 @@ def get_movie(movie_id: int, db: Session = Depends(get_db)):
     return movie
 
 
-@app.post("/movie")
+@app.post("/movie", status_code=status.HTTP_201_CREATED)
 def add_movie(movie: Movie, db: Session = Depends(get_db)):
     new_movie = Movies(title=movie.title, year=movie.year, genre=movie.genre)
     db.add(new_movie)
