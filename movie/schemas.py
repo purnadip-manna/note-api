@@ -9,10 +9,15 @@ from datetime import datetime
 
 
 class Movie(BaseModel):
-    id: int = None
     title: str
     year: int
     # genre: Set[Genre]
     genre: str
     cast: List[str]
     created_at: datetime
+
+
+class DisplayMovie(BaseModel):
+    id: int
+    title: str
+    year: int

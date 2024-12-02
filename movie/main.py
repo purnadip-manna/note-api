@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from movie.database import engine, Base, SessionLocal
 from movie.models import Movies
-from movie.schemas import Movie
+from movie.schemas import Movie, DisplayMovie
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
@@ -18,13 +18,13 @@ def get_db():
         db.close()
 
 
-@app.get("/movie")
+@app.get("/movie", response_model=list[DisplayMovie])
 def get_all_movies(db: Session = Depends(get_db)):
     movies = db.query(Movies).all()
     return movies
 
 
-@app.get("/movie/{movie_id}")
+@app.get("/movie/{movie_id}", response_model=DisplayMovie)
 def get_movie(movie_id: int, db: Session = Depends(get_db)):
     movie = db.query(Movies).filter(Movies.id == movie_id).first()
     if not movie:
