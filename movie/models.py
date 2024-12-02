@@ -10,14 +10,15 @@ class Movies(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     year = Column(Integer)
+    genre = Column(String)
 
-    genres = relationship("Genres", back_populates="movies")
+    # genres = relationship("Genres", back_populates="movies")
 
 
-class Genres(Base):
-    __tablename__ = "genres"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True)
-
-    movies = relationship("Movies", back_populates="genres")
+# class Genres(Base):
+#     __tablename__ = "genres"
+#
+#     id = Column(Integer, primary_key=True, index=True)
+#     name = Column(String, unique=True)
+#
+#     movies = relationship("Movies", back_populates="genres")

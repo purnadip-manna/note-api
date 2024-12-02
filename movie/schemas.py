@@ -1,17 +1,18 @@
 from pydantic import BaseModel
-from uuid import UUID
-from typing import List, Set
+from typing import List
 from datetime import datetime
 
 
-class Genre(BaseModel):
-    id: UUID = None
-    name: str
+# class Genre(BaseModel):
+#     id: UUID = None
+#     name: str
+
 
 class Movie(BaseModel):
-    id: UUID = None
+    id: int = None
     title: str
     year: int
-    genre: Set[Genre]
+    # genre: Set[Genre]
+    genre: str
     cast: List[str]
     created_at: datetime
