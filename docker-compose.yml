@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+    command: sh -c "uvicorn movie.main:app --reload --host 0.0.0.0 --port 8000"
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - movie-dev-db-data:/var/libs/postgresql/data
+    environment:
+      - POSTGRES_DB=movieDB
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=test
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "admin", "-d", "movieDB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  movie-dev-db-data:
