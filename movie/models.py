@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
 
-from database import Base
+from movie.database import Base
 
 
 class Movies(Base):

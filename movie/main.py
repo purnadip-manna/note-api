@@ -1,25 +1,10 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
-from typing import Annotated
+from fastapi import FastAPI
 
-from database import engine, SessionLocal
-from schemas import Movie
-import models
+from movie.database import engine, Base
+from movie.schemas import Movie
 
 app = FastAPI()
-models.Base.metadata.create_all(bind=engine)
-
-
-# def get_db():
-#     db = SessionLocal()
-#     try:
-#         yield db
-#     finally:
-#         db.close()
-#
-#
-# db_dependency = Annotated[Session, Depends(get_db)]
-
+Base.metadata.create_all(bind=engine)
 
 @app.get("/movie")
 def index():
