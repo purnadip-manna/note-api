@@ -1,10 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from . import config
 
-DB_URL = 'postgresql://admin:test@db:5432/movieDB'
-
-engine = create_engine(DB_URL)
+engine = create_engine(config.DB_URL)
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
