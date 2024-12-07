@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from dotenv import load_dotenv
 from src.routers import api
 from src.database import Base, engine
 from src.config import API_PREFIX
@@ -6,6 +7,8 @@ from src.routers.handlers.http_error import http_error_handler
 
 
 def get_application() -> FastAPI:
+    # load environment variables
+    load_dotenv()
     # create application
     application = FastAPI(title="Movie API", description="Simple Movie APIs")
     # include all routers
