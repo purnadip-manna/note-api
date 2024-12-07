@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-    command: sh -c "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
+    command: sh -c "uvicorn main:app --reload --host 0.0.0.0 --port 8000 --env-file .env"
     volumes:
       - ./app:/app
     ports:
@@ -19,10 +19,8 @@ services:
       - 5432:5432
     volumes:
       - movie-dev-db-data:/var/libs/postgresql/data
-    environment:
-      - POSTGRES_DB=movieDB
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=test
+    env_file:
+      - ./app/.env
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "admin", "-d", "movieDB"]
       interval: 10s
