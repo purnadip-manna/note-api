@@ -1,0 +1,21 @@
+from fastapi import FastAPI, HTTPException
+from src.routers import api
+from src.database import Base, engine
+from src.config import API_PREFIX
+from src.routers.handlers.http_error import http_error_handler
+
+
+def get_application() -> FastAPI:
+    # create application
+    application = FastAPI(title="Movie API", description="Simple Movie APIs")
+    # include all routers
+    application.include_router(api.router, prefix=API_PREFIX)
+    ## Add exception handlers
+    application.add_exception_handler(HTTPException, http_error_handler)
+    # create database tables
+    Base.metadata.create_all(bind=engine)
+
+    return application
+
+
+app = get_application()
