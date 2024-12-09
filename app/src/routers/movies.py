@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from ..domain.movie import schemas
 from ..domain.movie import service
@@ -7,9 +8,16 @@ from ..dependencies import get_db
 
 router = APIRouter(prefix="/movie", tags=["Movie"])
 
+oauth_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
+
 
 @router.get("/", response_model=list[schemas.MovieResponse])
-def get_all_movies(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def get_all_movies(
+    skip: int = 0,
+    limit: int = 10,
+    token: str = Depends(oauth_scheme),
+    db: Session = Depends(get_db),
+):
     return service.get_movies(db, skip, limit)
 
 
