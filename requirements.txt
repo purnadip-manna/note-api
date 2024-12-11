@@ -3,3 +3,6 @@ sqlalchemy
 uvicorn
 psycopg2
 python-dotenv
+pyjwt
+passlib[bcrypt]
+python-multipart
