@@ -22,7 +22,9 @@ def get_all_movies(
 
 
 @router.get("/{movie_id}", response_model=schemas.MovieResponse)
-def get_movie(movie_id: int, db: Session = Depends(get_db)):
+def get_movie(
+    movie_id: int, token: str = Depends(oauth_scheme), db: Session = Depends(get_db)
+):
     db_movie = service.get_movie_by_id(db, movie_id)
     if db_movie is None:
         raise HTTPException(
@@ -35,7 +37,11 @@ def get_movie(movie_id: int, db: Session = Depends(get_db)):
 @router.post(
     "/", response_model=schemas.MovieResponse, status_code=status.HTTP_201_CREATED
 )
-def add_movie(movie: schemas.MovieCreate, db: Session = Depends(get_db)):
+def add_movie(
+    movie: schemas.MovieCreate,
+    token: str = Depends(oauth_scheme),
+    db: Session = Depends(get_db),
+):
     return service.create_movie(db, movie)
 
 
@@ -51,6 +57,8 @@ def add_movie(movie: schemas.MovieCreate, db: Session = Depends(get_db)):
 
 
 @router.delete("/{movie_id}")
-def delete_movie(movie_id: int, db: Session = Depends(get_db)):
+def delete_movie(
+    movie_id: int, token: str = Depends(oauth_scheme), db: Session = Depends(get_db)
+):
     service.delete_movie(db, movie_id)
     return {"detail": "Movie deleted"}
