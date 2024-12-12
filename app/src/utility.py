@@ -3,7 +3,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
 
 from .config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
-
+from .domain.user.models import Users
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -16,9 +16,14 @@ def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(data: dict):
-    to_encode = data.copy()
+def create_access_token(data: Users):
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+    payload = dict()
+    payload["sub"] = data.username
+    payload["name"] = data.name
+    payload["email"] = data.email
+    payload["exp"] = expire
+
+    encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt

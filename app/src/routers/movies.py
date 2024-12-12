@@ -1,29 +1,28 @@
 from fastapi import APIRouter, HTTPException, status, Depends
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+
+from ..dependencies import get_db, get_current_user
 from ..domain.movie import schemas
 from ..domain.movie import service
-from ..dependencies import get_db
-
 
 router = APIRouter(prefix="/movie", tags=["Movie"])
-
-oauth_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
 
 
 @router.get("/", response_model=list[schemas.MovieResponse])
 def get_all_movies(
-    skip: int = 0,
-    limit: int = 10,
-    token: str = Depends(oauth_scheme),
-    db: Session = Depends(get_db),
+        skip: int = 0,
+        limit: int = 10,
+        token: dict = Depends(get_current_user),
+        db: Session = Depends(get_db),
 ):
+    print("Token Data:")
+    print(token)
     return service.get_movies(db, skip, limit)
 
 
 @router.get("/{movie_id}", response_model=schemas.MovieResponse)
 def get_movie(
-    movie_id: int, token: str = Depends(oauth_scheme), db: Session = Depends(get_db)
+        movie_id: int, token: str = Depends(get_current_user), db: Session = Depends(get_db)
 ):
     db_movie = service.get_movie_by_id(db, movie_id)
     if db_movie is None:
@@ -38,9 +37,9 @@ def get_movie(
     "/", response_model=schemas.MovieResponse, status_code=status.HTTP_201_CREATED
 )
 def add_movie(
-    movie: schemas.MovieCreate,
-    token: str = Depends(oauth_scheme),
-    db: Session = Depends(get_db),
+        movie: schemas.MovieCreate,
+        token: str = Depends(get_current_user),
+        db: Session = Depends(get_db),
 ):
     return service.create_movie(db, movie)
 
@@ -58,7 +57,7 @@ def add_movie(
 
 @router.delete("/{movie_id}")
 def delete_movie(
-    movie_id: int, token: str = Depends(oauth_scheme), db: Session = Depends(get_db)
+        movie_id: int, token: str = Depends(get_current_user), db: Session = Depends(get_db)
 ):
     service.delete_movie(db, movie_id)
     return {"detail": "Movie deleted"}
