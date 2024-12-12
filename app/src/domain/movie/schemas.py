@@ -1,10 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 
 
 class MovieCreate(BaseModel):
     title: str
-    year: int
+    year: int = Field(gt=1999, lt=2025)  # Data validation
     genre: str
 
 
