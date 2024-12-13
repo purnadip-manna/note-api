@@ -18,14 +18,14 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - movie-dev-db-data:/var/libs/postgresql/data
+      - note-dev-db-data:/var/libs/postgresql/data
     env_file:
       - ./app/.env
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "admin", "-d", "movieDB"]
+      test: ["CMD", "pg_isready", "-U", "admin", "-d", "notes"]
       interval: 10s
       timeout: 5s
       retries: 5
 
 volumes:
-  movie-dev-db-data:
+  note-dev-db-data:

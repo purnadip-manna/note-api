@@ -2,11 +2,11 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class GenreCreate(BaseModel):
+class TagCreate(BaseModel):
     name: str
 
 
-class GenreResponse(BaseModel):
+class TagResponse(BaseModel):
     id: int
     name: str
     created_at: datetime

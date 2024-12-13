@@ -10,7 +10,7 @@ def get_application() -> FastAPI:
     # load environment variables
     load_dotenv()
     # create application
-    application = FastAPI(title="Movie API", description="Simple Movie APIs")
+    application = FastAPI(title="Notes API", description="Simple Notes APIs")
     # include all routers
     application.include_router(api.router, prefix=API_PREFIX)
     ## Add exception handlers
