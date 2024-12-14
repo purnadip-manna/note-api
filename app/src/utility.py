@@ -23,6 +23,7 @@ def create_access_token(data: Users):
     payload["sub"] = data.username
     payload["name"] = data.name
     payload["email"] = data.email
+    payload["token_version"] = data.token_version
     payload["exp"] = expire
 
     encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)

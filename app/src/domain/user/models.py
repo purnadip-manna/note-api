@@ -11,3 +11,4 @@ class Users(Base):
     email: str = Column(String)
     password: str = Column(String)
     is_active: bool = Column(Boolean, default=True)
+    token_version: int = Column(Integer, default=1) # Handle token revocation
