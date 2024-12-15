@@ -11,7 +11,7 @@ router = APIRouter(prefix="/user", tags=["User"])
 
 @router.post("/signup", response_model=schemas.UserView)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = service.get_user(db, user.username)
+    db_user = service.get_user_by_username(db, user.username)
     if db_user is not None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists"
@@ -21,7 +21,7 @@ def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=schemas.UserView)
 def get_my_details(current_user: TokenData = Depends(get_current_user), db: Session = Depends(get_db)):
-    return service.get_user(db, current_user.sub)
+    return service.get_user_by_id(db, current_user.sub)
 
 
 @router.put("/me", response_model=schemas.UserView)

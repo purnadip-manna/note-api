@@ -23,7 +23,7 @@ def get_db():
 def get_current_user(token: str = Depends(oauth_scheme), db: Session = Depends(get_db)) -> TokenData:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user = db.query(Users).filter(Users.username == payload.get("sub")).first()
+        user = db.query(Users).filter(Users.id == payload.get("sub")).first()
 
         if not user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid authentication credentials")

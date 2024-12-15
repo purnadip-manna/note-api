@@ -1,4 +1,5 @@
 from fastapi import HTTPException, status
+from pydantic import UUID4
 
 from sqlalchemy.orm import Session
 from . import models, schemas
@@ -6,12 +7,15 @@ from ..auth.schemas import TokenData
 from ...utility import hash_password, verify_password
 
 
-def get_user(db: Session, username: str):
+def get_user_by_id(db: Session, user_id: UUID4):
+    return db.query(models.Users).filter(models.Users.id == user_id).first()
+
+
+def get_user_by_username(db: Session, username: str):
     return db.query(models.Users).filter(models.Users.username == username).first()
 
 
 def create_user(db: Session, user: schemas.UserCreate):
-    print(user.model_dump_json())
     db_user = models.Users(
         username=user.username,
         name=user.name,
@@ -26,7 +30,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 def update_user(db: Session, user: TokenData, updated_user: schemas.UserBase):
-    db_user = db.query(models.Users).filter(models.Users.username == user.sub).first()
+    db_user = db.query(models.Users).filter(models.Users.id == user.sub).first()
     if db_user:
         db_user.name = updated_user.name
         db_user.email = updated_user.email
@@ -39,7 +43,7 @@ def update_user(db: Session, user: TokenData, updated_user: schemas.UserBase):
 
 def update_password(password_request: schemas.UserUpdatePassword, user: TokenData, db: Session):
     if password_request.new_password == password_request.confirm_password:
-        db_user = db.query(models.Users).filter(models.Users.username == user.sub).first()
+        db_user = db.query(models.Users).filter(models.Users.id == user.sub).first()
         if db_user:
             if verify_password(password_request.old_password, db_user.password):
                 db_user.password = hash_password(password_request.new_password)

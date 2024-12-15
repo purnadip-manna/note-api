@@ -8,27 +8,28 @@ from ..domain.note import service
 
 router = APIRouter(prefix="/note", tags=["Note"])
 
+user_dependency = Depends(get_current_user)
+db_dependency = Depends(get_db)
+
 
 @router.get("/", response_model=list[schemas.NoteResponse])
 def get_all_notes(
         skip: int = 0,
         limit: int = 10,
-        token: TokenData = Depends(get_current_user),
-        db: Session = Depends(get_db),
+        current_user: TokenData = user_dependency,
+        db: Session = db_dependency,
 ):
-    print("Token Data:")
-    print(token.sub)
-    return service.get_notes(db, skip, limit)
+    return service.get_notes(db, current_user, skip, limit)
 
 
 @router.get("/{note_id}", response_model=schemas.NoteResponse)
 def get_note(
-        note_id: int, token: TokenData = Depends(get_current_user), db: Session = Depends(get_db)
+        note_id: int, current_user: TokenData = user_dependency, db: Session = db_dependency
 ):
-    db_note = service.get_note_by_id(db, note_id)
+    db_note = service.get_note_by_id(db, note_id, current_user)
     if db_note is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Note not found"
         )
 
     return db_note
@@ -39,26 +40,23 @@ def get_note(
 )
 def add_note(
         note: schemas.NoteCreate,
-        token: TokenData = Depends(get_current_user),
-        db: Session = Depends(get_db),
+        current_user: TokenData = user_dependency,
+        db: Session = db_dependency,
 ):
-    return service.create_note(db, note)
+    return service.create_note(db, note, current_user)
 
 
-# @router.put("/{note_id}")
-# def update_note(note: schemas, note_id: int, db: Session = Depends(get_db)):
-#     note1 = db.query(Movies).filter(Movies.id == note_id)
-#     if not note1.first():
-#         raise HTTPException(status_code=404, detail="Movie doesn't exist")
-
-#     note1.update({"title": note.title, "year": note.year, "tag": note.tag})
-#     db.commit()
-#     return {"Movie successfully updated"}
+@router.put("/{note_id}")
+def update_note(note: schemas.NoteCreate, note_id: int, db: Session = db_dependency,
+                current_user: TokenData = user_dependency):
+    return service.update_note(db, current_user, note_id, note)
 
 
 @router.delete("/{note_id}")
 def delete_note(
-        note_id: int, token: TokenData = Depends(get_current_user), db: Session = Depends(get_db)
+        note_id: int,
+        current_user: TokenData = user_dependency,
+        db: Session = db_dependency
 ):
-    service.delete_note(db, note_id)
-    return {"detail": "Movie deleted"}
+    service.delete_note(db, note_id, current_user)
+    return {"detail": "Note deleted"}
