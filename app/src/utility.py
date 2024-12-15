@@ -20,7 +20,7 @@ def create_access_token(data: Users):
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     payload = dict()
-    payload["sub"] = data.username
+    payload["sub"] = str(data.id)
     payload["name"] = data.name
     payload["email"] = data.email
     payload["token_version"] = data.token_version

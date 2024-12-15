@@ -1,19 +1,21 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, UUID4
 
 
 class UserBase(BaseModel):
     email: str
     name: str
 
-class User(UserBase):
-    username: str
 
-class UserView(User):
+class UserView(UserBase):
+    id: UUID4
+    username: str
     is_active: bool
 
 
-class UserCreate(User):
+class UserCreate(UserBase):
+    username: str
     password: str
+
 
 class UserUpdatePassword(BaseModel):
     old_password: str

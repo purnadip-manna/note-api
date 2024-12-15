@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, UUID4
 from datetime import datetime
 
 
@@ -11,4 +11,7 @@ class NoteResponse(BaseModel):
     id: int
     title: str
     content: str
+    created_by: UUID4
     created_at: datetime
+    updated_by: UUID4
+    updated_at: datetime
