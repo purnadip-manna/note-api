@@ -46,7 +46,7 @@ def add_note(
     return service.create_note(db, note, current_user)
 
 
-@router.put("/{note_id}")
+@router.put("/{note_id}", response_model=schemas.NoteResponse)
 def update_note(note: schemas.NoteCreate, note_id: int, db: Session = db_dependency,
                 current_user: TokenData = user_dependency):
     return service.update_note(db, current_user, note_id, note)
