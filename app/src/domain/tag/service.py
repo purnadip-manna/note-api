@@ -12,6 +12,11 @@ def get_tag_by_id(db: Session, current_user: TokenData, tag_id: int):
         models.Tags.created_by == current_user.sub).first()
 
 
+def get_tag_by_name(db: Session, current_user: TokenData, tag_name: str):
+    return db.query(models.Tags).filter(models.Tags.name == tag_name).filter(
+        models.Tags.created_by == current_user.sub).first()
+
+
 def create_tag(db: Session, current_user: TokenData, tag: schemas.TagCreate):
     tag_dict = tag.model_dump()
 
