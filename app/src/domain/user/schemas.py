@@ -1,5 +1,9 @@
 from pydantic import BaseModel, UUID4
+from enum import Enum
 
+class RoleEnum(str, Enum):
+    admin = "admin"
+    user = "user"
 
 class UserBase(BaseModel):
     email: str
@@ -9,6 +13,7 @@ class UserBase(BaseModel):
 class UserView(UserBase):
     id: UUID4
     username: str
+    role: RoleEnum
     is_active: bool
 
 

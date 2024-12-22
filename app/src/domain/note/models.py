@@ -23,6 +23,6 @@ class Notes(Base):
     content = Column(String)
     tags = relationship("Tags", secondary=note_tag_table, back_populates="notes")
     created_at = Column(DateTime, default=timestamp)
-    created_by = Column(UUID, ForeignKey("users.id"))
+    created_by = Column(UUID, ForeignKey("users.id", ondelete="CASCADE"))
     updated_at = Column(DateTime, default=timestamp)
-    updated_by = Column(UUID, ForeignKey("users.id"))
+    updated_by = Column(UUID, ForeignKey("users.id", ondelete="CASCADE"))
