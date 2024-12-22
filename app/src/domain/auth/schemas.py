@@ -10,4 +10,5 @@ class TokenData(BaseModel):
     sub: UUID4
     name: str
     email: str
+    role: str
     exp: int

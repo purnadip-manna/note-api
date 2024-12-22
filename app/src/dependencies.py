@@ -32,12 +32,14 @@ def get_current_user(token: str = Depends(oauth_scheme), db: Session = Depends(g
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
 
         if payload.get("token_version") != user.token_version:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token version mismatch. Please login again.")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail="Token version mismatch. Please login again.")
 
         token_data = TokenData(
             sub=payload.get("sub"),
             name=payload.get("name"),
             email=payload.get("email"),
+            role=payload.get("role"),
             exp=payload.get("exp")
         )
         return token_data
